@@ -4,7 +4,7 @@ date = 2020-04-26
 images = []
 tags = ['incremental computation']
 categories = ['programming']
-draft = true
+draft = false
 +++
 
 Incremental computation is a way of performing computations, with the
@@ -117,7 +117,7 @@ The questions that I view secondary to the core and not going to explore here ar
 - who does the recomputation  
 - can it be parallelized across different processes
 
-# Incremental Computation is not "just" Memoization
+## Incremental Computation is not "just" Memoization
 
 At this simple form incremental computation seems to be simply solved by
 function memoization. Memoization is comparing the inputs of a function against
@@ -202,7 +202,7 @@ Hopefully, at this point you are convinced that incremental computation problem
 is not 'just' memoization. Next I will show that it can be made to be just
 memoization, but will require a bigger program transformation.
 
-# Incremental Computation is "just" Memoization
+## Incremental Computation is "just" Memoization
 
 We need to start with a bit of insight from the lambda calculus. Each variable
 assignment `let x = <init>; <rest>` can be seen as `((x) => <rest>)(<init>)`,
@@ -273,7 +273,7 @@ which incrementality can be inserted.
 But first we will need to introduce a key dimension of incremental computation, and 
 show another solution which is in a way the complete opposite.
 
-# Push vs Pull in Incremental Computation
+## Push vs Pull in Incremental Computation
 
 The memoization solution above there was a nice similarity re-computation, followed
 exactly the same path as the original computation. Another way to say this is 
