@@ -1,7 +1,7 @@
-baseURL = "http://rkirov.github.io/"
+baseURL = "https://rkirov.github.io/"
 languageCode = "en-us"
 title = "Rado's Blog"
-theme = "hugo-kiera"
+theme = "fuji"
 
 pygmentsCodeFences = true
 

@@ -2,8 +2,8 @@
 title = "Incremental Computation (Draft)"
 date = 2020-04-26
 images = []
-tags = []
-categories = []
+tags = ['incremental computation']
+categories = ['programming']
 draft = true
 +++
 
