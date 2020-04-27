@@ -1,0 +1,18 @@
+baseURL = "http://rkirov.github.io/"
+languageCode = "en-us"
+title = "Rado's Blog"
+theme = "hugo-kiera"
+
+pygmentsCodeFences = true
+
+disqusShortname = "" #Disqus shortname
+googleAnalytics = "" #Google Analytics ID
+
+[author]
+    name = "Rado Kirov"           #Author name
+    github = "rkirov"         #Github username
+    twitter = "radokirov"        #Twitter username
+
+[params]
+    tagline = "subtly different semantics"
+    customCSS = []  #Optional Customised CSS
