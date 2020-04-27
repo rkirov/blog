@@ -1,5 +1,5 @@
 +++
-title = "Incremental Computation (Draft)"
+title = "Incremental Computation (Draft of part 1)"
 date = 2020-04-26
 images = []
 tags = ['incremental computation']
@@ -7,23 +7,30 @@ categories = ['programming']
 draft = true
 +++
 
-Incremental computation is a computational paradigm that naturally appears in a
-many programming environments - UI programming, dataflow, build systems, etc.
-Despite its prevalence, its fundamentals, nomenclature and practical trade-offs
-are not as well-shared across applications as other paradigms like concurrent
-computations or distributed computations. The purpose of this text is to teach
-you what it is and what are the core approaches to incremental computation.  I
-spend the last few years surveying various academic and industry work that
-relate to incremental computation, trying to understand them under common
-terminology. I hope this illuminates the current implementations and
-facilitates the sharing of knowledge.
+Incremental computation is a way of performing computations, with the
+expectation of future changes in inputs. When those changes occur the new
+output can be obtained efficiently, at minimum avoiding redoing the
+whole computation.
+
+Many programming environments deal with this problem - UI programming,
+dataflow, build systems, etc. Despite its prevalence, I find it is rarely
+viewer as a unified computational paradigm, as opposed to ad-hoc application of
+caching. In comparison, other computational paradigms like concurrent or
+distributed computating have better established nomenclature and techniques. 
+
+The purpose of this text is to teach you what 'incremental computation' is
+(likely you have seen it before, but didn't use that term) and establish common
+terminology for the basic approaches to the problem. I spend the last few years
+surveying various academic and industry work that relate to incremental
+computation, resulting in diverse pool of prior work. I hope this text guides
+future work in the theory or applications of incremental computation.
 
 ## Motivation
 
 To introduce 'incremental computation' I will start with intentionally limited
 environment that only contains functions and immutable primitives (numbers).
 If I jump straight into a full featured programming language will obscure the
-core ideas. In a more formal setting this would be the lambda calculus, but we
+core ideas. In a more formal setting this would be the lambda calculus, but I 
 will just use TypeScript and say away from higher-level constructs like arrays.
 You can replace this with any run-of-the-mill programming language that has
 closures.
@@ -42,10 +49,10 @@ Incremental computation, ultimately, is concerned with the question how to most
 effectively re-compute `d(x, y)` when some of the inputs have changed from `1`
 and `2` to something else.
 
-Say the new computation we would like to know is `d(1, 3)`. The new inputs
+Say the new computation I would like to know is `d(1, 3)`. The new inputs
 do not fully match the old ones, so a simple caching will not work as writen.
 
-However, instead of giving up on caching, we can break down the computation
+However, instead of giving up on caching, I can break down the computation
 down to the basic operations: addition, multiplication and square root.
 
 There are four core operations performed - two multiplications, one addition
@@ -101,7 +108,7 @@ The key questions around incremental computation at the abstract level of the
 computation graph will be:
 
 - how is this computation graph built?
-- how is the graph traversed. We were intentionally vagues in the Basic Algorithm.
+- how is the graph traversed. The Basic Algorithm in intentionally vague.
 - can it change while the program is running?
 - what if it has cycles?
 
