@@ -1,0 +1,10 @@
+digraph G {
+  node [shape=none]
+  square1 [label=" square"]
+  square2 [label=" square"]
+  x -> square1 [label=" x"]
+  y -> square2 [label=" y"]
+  square1 -> add [label=" op1"]
+  square2 -> add [label=" op2"]
+  add -> sqrt [label=" op3"]
+}

@@ -77,27 +77,36 @@ const op4 = Math.sqrt(op3);
 ```
 
 For this toy example, the best incremental computation will reuse or skip `1 *
-1` and then redo the other three operations with the new inputs. This can be
-easily expressed in an abstract directed graph form:
+1` and then redo the other three operations with the new inputs.
 
-```
-x -> op1
-y -> op2
-op1 -> op3
-op2 -> op3
-op3 -> op4
-```
+This can be easily expressed in an abstract directed graph form. The original
+computation is:
+
+![Computation graph](/incr1.png)
+
+Each node represents a variable and all incoming edges together represent
+the inputs to the function that computes the variable.
+
+The recomputation for `d(1, 3)` after `d(1, 1)` will ideally only go through
+the path in red.
+
+![Recomputation graph 1](/incr3.png)
+
+Meanwhile, the recomputation for `d(-1, -1)` after `d(1, 1)` will go start with
+two red paths, but end in the middle (since the output does not change).
+
+![Recomputation graph 2](/incr4.png)
 
 The basic algorithm over the abstract computation graph is:
 
-Basic Algorithm of Incremental Computation
+**Basic Algorithm of Incremental Computation**
 
 1. when at least one of the inputs of an operation has changed, redo the
-   computation to get new outputs.
-1. repeat this or all nodes.
+   operation to get new outputs.
+1. repeat until there are no more changes.
 
 This algorithm has no name as it is so simple. The complexity comes in how to
-best build the computaiton graph, especially on top of general programming
+best build the computation graph, especially on top of general programming
 languages which have no incremental primitives.
 
 Also at this level you can already start to see the similarity with build
@@ -147,9 +156,9 @@ function d(x: number, y: number) {
 Now, we can memoize each inner operation along with the whole function:
 
 ```javascript
-const memoAdd = memo(add, 'add');
-const memoSquare = memo(square, 'square');
-const memoSqrt = memo(Math.sqrt, 'sqrt');
+const memoAdd = memo(add);
+const memoSquare = memo(square);
+const memoSqrt = memo(Math.sqrt);
 
 function innerMemoD(x: number, y: number) {
   const op1 = memoSquare(x);
@@ -158,15 +167,19 @@ function innerMemoD(x: number, y: number) {
   const op4 = memoSqrt(op3);
   return op4;
 }
-const memoD = memo(innerMemoD, 'd');
+const memoD = memo(innerMemoD);
 ```
 
-However, notice that while each operation is memoized - the flow through the
-function is always the same `op1 -> op2 -> op3 -> op4`, even if there some
-sharing like computing `d(1, 3)` or `d(-1, 2)` after `d(1, 2)`. 
+However, notice that while each operation is memoized - the computation
+proceeds exactly the same way as before through the
 
-We can produce the 'even-more-incremental' program by adding some 
-'check-if-changed-and-skip' calls:
+![Computation Graph](/incr5.png)
+
+We made the cost of each operation (think edge in the graph) as small as
+possible during the evaluation, but the flow is the same. 
+
+We can produce the even more incremental which truly follows a different
+computation path program by adding some 'check-if-changed-and-skip' calls:
 
 ```typescript
 let lastOp1: null|number = null;
@@ -196,11 +209,18 @@ function skipCallsD(x: number, y: number) {
 ```
 
 Notice that the structure of the checks matches the abstract computation graph.
-We can't skip to the end if `op1` hasn't changed, because potentially `op2`.
+We can't skip to the end if `op1` hasn't changed, because potentially `op2` can
+be different.
+
+This allows us to achieve the incremental flow depicted here for recomputing
+`d(-1,-1)` after `d(1, 1)`
+
+![Recomputation graph 2](/incr4.png)
 
 Hopefully, at this point you are convinced that incremental computation problem
-is not 'just' memoization. Next I will show that it can be made to be just
-memoization, but will require a bigger program transformation.
+is not 'just' memoization as we had to add if-else statements too. Next I will
+show that the program above can be made to look like just memoization, but will
+require a bigger program transformation.
 
 ## Incremental Computation is "just" Memoization
 
@@ -209,22 +229,30 @@ assignment `let x = <init>; <rest>` can be seen as `((x) => <rest>)(<init>)`,
 giving us an opportunity to insert a memoization boundary on some new
 functions that were not previously there. 
 
-The rewriten function now looks like this:
+It will takes a few attempts to get to the correct form. Let's start naively
+replacing assignments with functions.
 
 ```typescript
-function insideOutD(x: number, y: number) {
-  return ((op1: number, op2: number) => 
-    ((op3: number) =>
-      ((op4: number) =>
-        op4 
-      )(memoSqrt(op3))
-    )(memoAdd(op1, op2))
-  )(memoSquare(x), memoSquare(y))
+function wrongD(x: number, y: number) {
+  return ((op1: number) => 
+    ...
+  )(memoSquare(x));
 }
 ```
 
-Notice that we didn't use the similar looking rewriting, which would be more inline 
-with mechanically replacing each variable assignment operation.
+then add `op2`,
+
+```typescript
+function wrongD(x: number, y: number) {
+  return ((op1: number) => 
+    ((op2: number) =>
+      ...
+    )(memoSquare(y))
+  )(memoSquare(x));
+}
+```
+
+and eventually get to
 
 ```typescript
 function wrongD(x: number, y: number) {
@@ -240,11 +268,28 @@ function wrongD(x: number, y: number) {
 }
 ```
 
-It would have resulted in the correct original computation, but wrong incremental
-computation. Turning this rewriting to an actual automated process would be an
-interesting project.
+Now imagine that all four inner functions are also memoized. While
+it will give us the correct recomputation of `d(-1,-1)` after `d(1,1)`
+it will be wrong for `d(1, 3)` after `d(1, 1)`. This is because
+as soon as `op1` is the same as before we will skip to the end, ignoring
+any change to `op2`.
 
-Finally, we can extract the functions to run them throught memoization operation:
+The correct rewriting for memoization is below, reflecting the fact that 
+`op3` has two inputs over which we have to memoize together.
+
+```typescript
+function insideOutD(x: number, y: number) {
+  return ((op1: number, op2: number) => 
+    ((op3: number) =>
+      ((op4: number) =>
+        op4 
+      )(memoSqrt(op3))
+    )(memoAdd(op1, op2))
+  )(memoSquare(x), memoSquare(y))
+}
+```
+
+Finally, we can extract the functions to run them through the memoization operation:
 
 ```typescript
 const fn1 = memo((op1: number, op2: number) => fn2(memoAdd(op1, op2)));
@@ -258,7 +303,7 @@ const superMemoD = memo(superMemoD, 'd');
 ```
 
 While requiring a fancy program rewriting, to the point where the original
-program is unrecognizable, this has a more aesteically pleasing property that
+program is unrecognizable, this has a more aesthetically pleasing property that
 one can begin to imagine a principled way of adding incrementality instead of
 manually inserting if-else statements.
 
@@ -266,81 +311,91 @@ Also having so many memoization calls is certainly an overkill in any practical
 problem -- we are memoizing an identity function at some point, which would be
 faster to run -- but the point of pushing a simple example to the extreme is to
 see all the opportunities for incrementality. In practice, the incrementality
-solution is often manually, inserted into an non-incremental program. Explroing
+solution is often manually, inserted into an non-incremental program. Exploring
 maximal incrementality over tiny program, shows all the techniques and ways in
 which incrementality can be inserted.
 
-But first we will need to introduce a key dimension of incremental computation, and 
-show another solution which is in a way the complete opposite.
+Also, notice that we still do not have incrementality for this flow: 
+
+![Recomputation graph 1](/incr3.png)
+
+While we can "skip to the end" of the computation, we cannot skip over the
+purely `x` part of the computation graph, if we know `x` hasn't changed.
+
+While it is likely achievable with more fancy program rewriting, we will get
+there  by using a different technique - push-based incremental computation.
 
 ## Push vs Pull in Incremental Computation
 
-The memoization solution above there was a nice similarity re-computation, followed
-exactly the same path as the original computation. Another way to say this is 
-that the re-computation was started and in the process it *pulled* the
-updated inputs.
+The memoization solution above has a nice similarity with the original
+computation, it followed roughly same path as the original computation. 
 
 While very natural, there is an alternative approach. The new updates can themselves
-trigger a recomputation. 
+trigger a recomputation. This is known as _push-based_ computation, because the
+new values of inputs, push themselves into the computaiton.
+
+The classical approach is knowns as _pull-based_, as to recompute `d(1,3)` we
+have to pull the new inputs `1` and `3`. Similarly, `op3 = add(op1, op2)` is
+seen as pulling `op1` and `op2` to compute `op3`.
 
 Another terminology used is reactive vs interactive, but there is something called
-'push-based reactivity' so I am coing to steer clear of these to avoid confusion.
+'push-based reactivity' so I am going to steer clear of these to avoid confusion.
 
-To sumarize:
-- classic computation (pull) - computatation *pulls* the updated inputs to
+To summarize:
+- classic computation (pull) - computation *pulls* the updated inputs to
   produce the desired outputs.
 - push-based incremental computation - the updated inputs *push* themselves
   into the computation to produce the desired outputs.
 
-In our original example, a push-bassed version will look something like this:
+In our original example, a push-based version will look something like this:
 
 ```typescript
 const x = {
   set(x: number) {
-    p1.update(x);
+    op1.update(x);
   }
 };
 
 const y = {
   set(y: number) {
-    p2.update(y);
+    op2.update(y);
   }
 };
 
-const p1 = {
+const op1 = {
   last: null as number | null,
   update(x: number) {
     if (x !== this.last) {
-      p3.updateArg1(x * x);
+      op3.updateArg1(x * x);
     }
   }
 }
 
-const p2 = {
+const op2 = {
   last: null as number | null,
   update(x: number) {
     if (x !== this.last) {
-      p3.updateArg2(x * x);
+      op3.updateArg2(x * x);
     }
   }
 }
 
-const p3 = {
+const op3 = {
   arg1: null as number|null,
   arg2: null as number|null,
 
   updateArg1(x: number) {
+    if (x !== this.arg1 && this.arg2 != null) op4.update(this.arg1 + this.arg2);
     this.arg1 = x;
-    if (this.arg2 != null) p4.update(this.arg1 + this.arg2);
   },
 
-  updateArg2(x: number) {
-    this.arg2 = x;
-    if (this.arg1 != null) p4.update(this.arg1 + this.arg2);
+  updateArg2(y: number) {
+    if (y !== this.arg2 && this.arg1 != null) op4.update(this.arg1 + this.arg2);
+    this.arg2 = y;
   },
 }
 
-const p4 = {
+const op4 = {
   last: null as number | null,
   update(x: number) {
     if (x !== this.last) {
@@ -358,8 +413,9 @@ y.set(1);
 y.set(2);
 ```
 
-Notice that in terms of operations this approach is just as efficient as the
-pull-based one - one operation is reused and three others reevalutated. 
+This solution lets us achieve the desired recomputation flow.
+
+![Recomputation graph 1](/incr3.png)
 
 When is a push-based vs pull-based incremental solution better? To be honest I
 am not sure yet, would like to hear what do you think.
@@ -402,7 +458,7 @@ console.log('re-computation of with new y');
 y.next(-1);
 
 console.log('re-computation of with new x');
-x.next(2);
+x.next(3);
 ```
 
 The next challenge is to extend the toy computation model to a full blown

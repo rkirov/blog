@@ -1,0 +1,13 @@
+digraph G {
+  rankdir="LR"
+  node [shape=none]
+  x -> op1 [label="square"]
+  y -> op2 [label="square", color="red"]
+  op1 -> op3 [label="add", color="red"]
+  op2 -> op3 [color="red"]
+  op3 -> op4 [label="sqrt", color="red"]
+  y [color="red"]
+  op2 [color="red"]
+  op3 [color="red"]
+  op4 [color="red"]
+}
