@@ -1,0 +1,7 @@
+digraph G {
+  label = "b is false"
+  rankdir="LR"
+  node [shape=none]
+  y -> op2 [label="square"]
+  op2 -> op3 
+}

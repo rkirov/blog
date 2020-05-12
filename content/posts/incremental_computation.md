@@ -111,10 +111,6 @@ This algorithm has no name as it is so simple. The complexity comes in how to
 best build the computation graph, especially on top of general programming
 languages which have no incremental primitives.
 
-Also at this level you can already start to see the similarity with build
-systems like 'make'. In a way build systems are the simplest instances of
-incremental computation. 
-
 The key questions around incremental computation at the abstract level of the 
 computation graph will be:
 
@@ -576,9 +572,13 @@ And by the magic of update callbacks and lastValue checks the computation does
 the minimum needed work. The downside of this approach is that batch updates,
 meaning change a number of inputs and then recompute are harder to implement.
 
-Push-based computations appears naturally easier for incrementality. If you are
-wondering if there is such thing as a reversed push-based computation, indeed
-I have an example of it here (add gist here).
+Push-based computations appears naturally easier for incrementality. The same
+observation was made by Yaron Minksy in his excellent blog on the Incremental 
+library in OCaml
+[https://blog.janestreet.com/introducing-incremental/.](https://blog.janestreet.com/introducing-incremental/)
+
+If you are wondering if there is such thing as a reversed push-based
+computation, indeed I have an example of it here (add gist here).
 
 ## Connection with Reactive / Streaming frameworks
 
@@ -594,14 +594,6 @@ import {map} from 'rxjs/operators';
 
 const x = new Subject<number>();
 const y = new Subject<number>();
-
-function square(x: number) {
-  return x * x;
-}
-
-function add(x: number, y: number) {
-  return x + y;
-}
 
 const op1 = x.pipe(map(square));
 const op2 = y.pipe(map(square));
@@ -621,36 +613,79 @@ console.log('re-computation of with new x');
 x.next(3);
 ```
 
+## Build systems and incremental computation
+
+Build systems are tools that perform incremental computation specifically in
+the domain of files and executables that read and write these files.  If you
+familiar with build systems like 'make', 'ninja' or 'bazel', you might have
+already spotted the similarities with what we have been discussing so far.
+
+The major different is the domain of build tools is more limited than
+general computation, and usually they have DSL for describing the computation
+that is different from a general purpose programming language.
+
+Our simple computation will look like this in Make. If you never seen a
+Makefile before you read it as `<output filename>: <input files>\n\t<bash
+command to run>`.
+
+```make
+op1: x
+	node square.js x > op1
+
+op2: y
+	node square.js y > op2
+
+op3: op1 op2
+	node add.js op1 op2 > op3
+
+op4: op3
+	node sqrt.js op3 > op4
+
+d: op4
+	cat op4
+```
+
+The scripts `square.js`, `add.js`, `sqrt.js` are straight-forward
+implementation that read the files, parse them as numbers and print the
+operation in the name.
+
+```
+// computation
+$ echo 1 > x; echo 1 > y;
+$ make d
+node square.js x > op1
+node square.js y > op2
+node add.js op1 op2 > op3
+node sqrt.js op3 > op4
+cat op4
+1.4142135623730951
+
+// recomputation
+$ echo 3 > y;
+$ make d
+node square.js y > op2
+node add.js op1 op2 > op3
+node sqrt.js op3 > op4
+cat op4
+3.1622776601683795
+```
+
+As make prints out the operations it performs, it is clear that `op1` is skipped 
+as its inputs have not changed. It is worth mentioning that build systems
+usually use file time stamps as check whether something has changed or not, 
+which can result in less incrementality when using inputs like `-1` that are
+equivalent to `1` after squaring.
+
+In terms of the characteristics we described earlier, make performs a reverse
+pull-based computation. We start with the final output `op4` (reverse) and each
+file is directly read (pull-based) instead of using a file watch mechanism for
+each file to pass it contents into the next operation.
+
+One can say that incremental computation is a way of turning your general
+programs into build systems.
+
+## Onto part 2 
+
 The next challenge is to extend the toy computation model to a full blown
-language that includes control flow and mutable object. We will begin with control flow.
-
-
-## Incremental computation and control flow
-
-TODO - expand the original example. Discuss connection with 'applicative vs
-monadic' build systems.
-
-## Adaptive computation 
-
-Present https://github.com/rkirov/adapt-comp.
-
-## Adding mutable objects and differential programming
-
-TODO - present "delta calculus".
-
-## UI programming 
-
-TODO - incremental programming in JS frameworks.
-
-## Conclusion
-
-TODO
-
-## References
-
-1. Mokhov, Mitchell, Jones, Build Systems à la Carte, Proc. ACM Program, 2018.
-1. Magnus Carlsson. Monads for Incremental Computing. ICFP '02 Proceedings of the seventh ACM SIGPLAN international conference on Functional programming
-1. U. Acar, G. Blelloch, and R. Harper. Adaptive functional programming. In Principles of Programming Languages (POPL02), Portland, Oregon, January 2002. ACM
-1. Conal Elliot, Functional Reactive Animation 
-1. https://crates.io/crates/salsa
-1. https://github.com/TimelyDataflow/differential-dataflow
+language that includes control flow and mutable object. We will begin with
+control flow.

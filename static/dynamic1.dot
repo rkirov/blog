@@ -1,0 +1,9 @@
+digraph G {
+  rankdir="LR"
+  node [shape=none]
+  b -> op3 [label="if-else"]
+  x -> op1 [label="square"]
+  y -> op2 [label="square"]
+  op1 -> op3 
+  op2 -> op3
+}
