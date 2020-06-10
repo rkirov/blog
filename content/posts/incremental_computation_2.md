@@ -7,14 +7,12 @@ categories = ['programming']
 draft = false
 +++
 
-## Incremental computation (part 2)
-
 We have been talking about general computation, but so far our language was
 very limited. We only used function calls, numbers, and simple variable
 binding.
 
 We will slowly add more language primitives and see how to still have 
-incrementality of the computation. First is conditional statements.
+full incrementality of the computation.
 
 ## Conditional statements
 
@@ -65,8 +63,8 @@ have to move to a dynamic model of computations.
 
 ## Dynamic vs Static computation graph
 
-Then depending on the last value of `b` the computation is represented by one
-of the two following options.
+The right viewpoint is that depending on the last value of `b` the computation
+is represented by one of the two following options.
 
 ![cond is true graph](/dynamic-true.png)
 
@@ -80,9 +78,9 @@ there could be another sub-computation to get to it.
 
 To fully support incremental computation and conditional statements one needs
 to have support for a dynamically adjusting computation graph. Otherwise, the
-static graph techniques will over-approximate, but still provide some value.
-They will basically treat `op1 ? op2 : op3` as a basic function `f(op1, op2,
-op3)` that always needs all three inputs.
+static graph techniques can still be used, but they will be an
+over-approximation.  They will basically treat `op1 ? op2 : op3` as a function
+`f(op1, op2, op3)` that always needs all three inputs.
 
 One has to be careful in using the word dynamic as here we are talking about
 adjusting the computation graph, not the graph creation itself. As we have
@@ -91,16 +89,17 @@ dynamically. We still consider them static incremental computation as they
 cannot adjust during re-computations.
 
 Unsurprisingly, the same observations were made in the build systems space in
-the paper `Build systems a la carte`. In their work they used a model for build
-systems written in Haskell. Our separation between static and dynamic
-computation graph is equivalent to what they call - applicative vs monadic
-build systems. Most popular build systems like make are applicative (static).
+the paper `Build systems a la carte` (see refs in part 3). In their work they
+used a model for build systems written in Haskell. Our separation between
+static and dynamic computation graph is equivalent to what they call -
+applicative vs monadic build systems. Most popular build systems like `make`
+are applicative (static).
 
 ## Adaptive (self-adjusting) computation
 
-While turning the example above into an incremental function is relatively
-easy using if-else statements (try it), a general framework that supports
-dynamic incremental computation is too involved to go through in this post.
+While turning the example above into an incremental function is relatively easy
+using `if-else` statements (try it), a general framework that supports dynamic
+incremental computation is too involved to go through in this post.
 
 Luckily, this has been well studied in the past and there existing
 implementations. The work of [Acar - Self-adjusting
@@ -110,7 +109,7 @@ Carlsson in [Monads for Incremental
 Computing](https://dl.acm.org/doi/abs/10.1145/581478.581482).  His
 implementation is in Haskell making heavy use of monads and do-notation.  I
 have translated his implementation to TypeScript -
-[adapt-comp](https://github.com/rkirov/adapt-comp). It required loosing some of
+[adapt-comp](https://github.com/rkirov/adapt-comp). It required losing some of
 the heavy monadic type guarantees from the Haskell implementation, but
 it caries the same basic algorithms and datatypes.
 
@@ -119,8 +118,8 @@ computation interchangeably when talking about the concepts. The library
 implementing the particular algorithms for incremental computation is called
 'adapt-comp' in reference to the original work by Acar, et.al.
 
-The distance function example from part 1 looks like this in adaptive
-computation:
+The distance function example from part 1 of the blog post looks like this
+using the library:
 
 ```typescript
 const x = comp(pure(1));
@@ -146,18 +145,20 @@ single build block of the computation. The only argument to `comp` describes
 how is the operation built. It either a basic value, which has to be wrapped
 like this - `pure(<some value>)`, or a result of reading another variable using
 the `read` function. Once a variable is read with `read`, we pass a callback
-that describes what to do with the value read. The only catch is that at the
-end of the callback we still have to return another `pure` or `read`.
+that describes what to do with the value that was just read. The only catch is
+that at the end of the callback we still have to return another `pure` or
+`read`.
 
 (Aside: if one is familiar with monads they recognize the structure here, which
-comes from the Haskell linage of this code. If not don't worry, this exposition
+comes from the Haskell linage of this code. If not don't worry, my exposition
 is self-contained.)
 
 This is a push-based direct incremental computation using the terminology from
-part 1. When one calls `write(y, 3)`, all the computations that had `read(y,
-...)` have their corresponding callback retriggered, then recursively their
-dependents are retriggered. At any point the last and new values are compared
-and if the value hasn't changed the retriggering is stopped.
+part 1, as we observed that it leads to the easiest way to add incrementality.
+When one calls `write(y, 3)`, all the computations that had `read(y, ...)` have
+their corresponding callback retriggered, then recursively their dependents are
+retriggered, and so on. At any point the last and new values are compared and
+if the value hasn't changed the retriggering is stopped.
 
 So far, this doesn't seems to carry its weight as we had simpler
 implementations doing this in part 1. However, 'adapt-comp' supports a dynamic
@@ -192,20 +193,20 @@ console.log(op4.get());  // immediate return of the previous value
 
 As seen in part 1, the observable pattern and in particular RxJS implementation
 allows for easy implementation of push-based incremental computation (and
-more).
+much more).
 
 To strengthen this point this is how our example will look like in RxJS.
 
 ```typescript
 import {of, switchMap, Subject} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, distinctUntilChanged} from 'rxjs/operators';
 
 const b = new Subject<boolean>();
 const x = new Subject<number>();
 const y = new Subject<number>();
 
-const op1 = x.pipe(map(square));
-const op2 = y.pipe(map(square));
+const op1 = x.pipe(map(square), distinctUntilChanged());
+const op2 = y.pipe(map(square), distinctUntilChanged());
 const op3 = b.pipe(switchMap(b => b ? op1 : op2));
 
 op3.subscribe(console.log);
@@ -235,7 +236,7 @@ concept is recursion.
 We have been focusing on a single function so far. Extending the framework to
 multiple distinct functions is straight forward. Graphically, a function call
 was treated as a single node, but if it is an incremental computation we can 
-embedded its own graph into the node to form one bigger computation graph.
+embedded its own graph into another node to form one bigger computation graph.
 
 The question of multiple calls into the same function, especially recursively
 might give us a pause. Say we want to make the following recursive function
@@ -286,10 +287,9 @@ res.get();  // returns 155;
 ```
 
 As we see there is nothing special about recursion, because we can dynamically
-create new computation variables (they have the `Modifable<T>` interface). The
-function boundaries are almost irrelevant for the re-computation. The only
-thing that matters is which computations are created `cond` and what reads have
-happened during the computation.
+create new computation variables. The function boundaries are almost irrelevant
+for the re-computation. The only thing that matters is which computations are
+ created by `comp` and what reads have happened during the computation.
 
 ## Looping and Mutable variables
 
@@ -299,7 +299,7 @@ directly support `for` and `while` loops in the `adapt-comp` world. Calling
 control flow from the `read` callbacks back to original loop.
 
 However, we are in luck as all `for` and `while` loops can be rewritten through
-recursion. In fact the recursion example above could be seen as the functinoal
+recursion. In fact the recursion example above could be seen as the functional
 rewrite for the following imperative program:
 
 ```typescript
@@ -312,10 +312,11 @@ function sumUp(x: number, y: number) {
 }
 ```
 
-So we already have an incremental solution for it above. Unfortunately, we also
-see one of the failures of incremental computation, by virtue of it being so
-general, it does not take into account the algebraic properties of `+`
-(commutativity, associtivity, etc.) 
+So we already have an incremental solution for it above.
+
+This example, also shows one of the failures of incremental computation, by
+virtue of it being so general, it does not take into account the algebraic
+properties of `+` (commutativity, associtivity, etc.) 
 
 If we recompute `sumUp(10, 100)` after `sumUp(10, 0)` it is clear to us that
 the best way to do it is through simply adding `100` to the old result. But
@@ -325,21 +326,24 @@ the incremental program we have above sees the computation as:
 (100 + ... + (3 + (2 + (1 + (0 + 0))))) 
 ```
 
-where the last `0` is `y`. Changing while busts the whole chain of computation
-and all additions get redone. Now that is not unavoidable as one can write the 
-computation using the algebraic properties of `+`: 
+where the last `0` is `y`. Changing it to `100` busts the whole chain of computation
+and all additions get redone. We know that doesn't seem efficient, the
+incremental computation show just add `100` to the previous result. 
+
+Now that is not unavoidable as one can write the computation using the
+algebraic properties of `+`: 
 
 ```
 (100 + ... + (3 + (2 + (1 + 0)))) + 0
 ```
 
 But an automated framework cannot do that without some knowledge about the 
-properies of `+`. Asking the user to write this is also a tricky proposition
-as the promise of incrementality was that the incremental program is easily
-extracted or transformed from the original computation.
+properies of `+`. The user herself can write the computation in that form from
+the beginning, but that goes against the promise that the incremental program
+is easily extracted by code transformation from from the original computation.
 
-Moreover, once the user has to think about incrementality they would write 
-by hand this `update` function for `sumUp`:
+Moreover, once the user has to think about incrementality they can write by
+hand this `update` function for `sumUp`:
 
 ```typescript
 function updateSumUpForNewY(oldSum: number, deltaY: number) {
@@ -357,10 +361,14 @@ information on __how__ has the input changed.
 
 ## The Computational Derivative 
 
-To move to an even more mathematical notation if the original function is `f(x,
-y)` and we want to compute find `f(x', y')` an incremental way of computing it
-would be use compute `f(x, y) ⊕ f'(x, y, Δx, Δy))` where `Δx = x' ⊖ x` and `Δy
-= y' ⊖ x`.  Why the circles around `+` and `-`? Because we didn't specify the
+To move to an even more mathematical notation, if the original function is `f(x,
+y)` and we want to compute `f(x', y')`, an incremental way of computing it
+would be to use `f(x, y) ⊕ f'(x, y, Δx, Δy))` where `Δx = x' ⊖ x` and `Δy = y'
+⊖ x`. The reads roughly as 'to compute the new output, we add the old output to
+the result of some special function `f'` that consumes the old inputs and their
+changes'.
+
+Why the circles around `+` and `-`? Because we didn't specify the
 types these are generic ways of creating `⊕`, and applying `⊖` diffs for some
 given type. For `number` as the input type, these are literally `+` and `-` and
 the diff type is `number`.  However, for `number[]` the diff structure will
@@ -381,8 +389,8 @@ function sumUpTo'(newX: number, newY: number, deltaX: number, deltaY: number) {
 
 Of course, I cheated in creating this by applying well-known mathematical
 equalities (check my work). The question of interest is how to extract that
-from the original function definition. And can this be done for any general
-computation, not just numerical.
+from the original function definition. Can this be done for any general
+computation, not just numerical?
 
 Deriving such derivative function in the lambda calculus is described in the
 paper [A Theory of Changes for Higher-Order
@@ -396,17 +404,19 @@ specifically for mutable data structures that we will explore in a bit.
 It is unclear to me whether the diffable addition to incremental computation is
 objectively different approach compared to the basic methods we have discussed
 for far or an optimization to support the pragmatics of mutable data
-  structures.
+  structures. Let me know what do you think.
 
 ## Automatic-differentiation aside
 
 If you have been following you the machine learning community this might
-light-bulb - automatic differentiation! Unfortunately, the computational
-derivative for a function that deals with numerics is not the same as the
-mathematical derivative for the underlying math function. Mathematically, the
-computational derivative is just the difference function `f(x') - f(x)`.
-Different forms of writing that function (with some being faster to compute) is
-question in the domain of computer science and not mathematics.
+light-bulb - automatic differentiation!
+
+Unfortunately, the computational derivative for a function that deals with
+numerics is not the same as the mathematical derivative for the underlying math
+function. Mathematically, the computational derivative is just the difference
+function `f(x') - f(x)`.  Different forms of writing that function (with some
+being faster to compute) is question in the domain of computer science and not
+mathematics.
 
 That said the study of applying program transformations to extract the
 mathematical derivative has a lot of parallels with the techniques for
@@ -489,13 +499,15 @@ write(p.name, 'Jane Smith');
 businessCard.get();
 ```
 
-Rust's [salsa](https://github.com/salsa-rs) relies on this observation to only
-support static object definitions. Through macros a lot of the supporting
-machinery is generated on predefined functions instead of behind as dynamic as
-the incremental implementations above. An extra layer of extensibility is added
-through supporting keys per object - think `p['user'].name`. As long as there
-are no methods working over the collection as a whole (no map, reduce, etc)
-this is a simpler model (which is not necessarily a bad thing).
+The [salsa framework in Rust](https://github.com/salsa-rs) relies on this
+observation to only support static object definitions. Through macros a lot of
+the supporting machinery is generated on predefined functions instead of being
+as dynamic as the incremental implementations above. An extra layer of
+extensibility is added through supporting keys per object - think `p['John
+Doe'].name`. As long as there are no methods working over the collection as a
+whole (no map, reduce, etc) this is a simpler model than general incremental
+computation, but still expressive enough to help with writing incremental
+compilers.
 
 ## Online combinatorial algorithms
 
@@ -511,9 +523,11 @@ work of Tarjan is representative - [A Data Structure for Dynamic Trees]
 (https://www.cs.cmu.edu/~sleator/papers/dynamic-trees.pdf). One of the
 original goals of research of incremental computation was to automatically
 derive these type of structures through incrementalizing the classical
-algorithms.
+algorithms, instead of incremenlizing them one by one.
 
 ## Onto part 2
 
 This concludes the introduction into incremental computation, in part 3 we will
 talk about applications to UI programming and conclude the series.
+
+[Continue to part 3 of the post](/posts/incremental_computation_3)

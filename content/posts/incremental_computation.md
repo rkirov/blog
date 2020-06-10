@@ -8,32 +8,34 @@ draft = false
 +++
 
 Incremental computation is a way of performing computations, with the
-expectation of future changes in inputs. When those changes occur the new
-output can be obtained efficiently, at minimum avoiding redoing the
-whole computation.
+expectation of future changes in the inputs to the computiation. When those
+changes occur the output can be updated efficiently, at minimum faster than
+redoing the whole computation from scratch.
 
-Many programming environments deal with this problem - UI programming,
-dataflow, build systems, etc. Despite its prevalence, I find it is rarely
-viewer as a unified computational paradigm, as opposed to ad-hoc application of
-caching. In comparison, other computational paradigms like concurrent or
-distributed computating have better established nomenclature and techniques. 
+This problem occurs in many programming domains - UI programming, data flow,
+build systems, compilers, code editors. Likely you have seen it before, but
+didn't call it incremental computation. Despite its prevalence, it is rarely
+viewed as a common computational paradigm. It is more often referred to as an
+ad-hoc application of caching or memoization. In comparison, other
+computational paradigms like concurrent, lazy, distributed computation have
+better known nomenclature and techniques. 
 
-The purpose of this text is to teach you what 'incremental computation' is
-(likely you have seen it before, but didn't use that term) and establish common
-terminology for the basic approaches to the problem. I spend the last few years
-surveying various academic and industry work that relate to incremental
-computation, resulting in diverse pool of prior work. I hope this text guides
-future work in the theory or applications of incremental computation.
+In this series of blog posts I will attempt to teach you what 'incremental
+computation' is. I will motive the problem using a small subset of JavaScript
+and establish common terminology for the basic approaches to the problem.  I
+spent the last few years surveying various academic and industry work that
+relate to incremental computation, resulting in diverse pool of prior work.  I
+hope by the end of your reading of this post that work is accessible to you.
 
 ## Motivation
 
 To introduce 'incremental computation' I will start with intentionally limited
-environment that only contains functions and immutable primitives (numbers).
-If I jump straight into a full featured programming language will obscure the
-core ideas. In a more formal setting this would be the lambda calculus, but I 
-will just use TypeScript and say away from higher-level constructs like arrays.
-You can replace this with any run-of-the-mill programming language that has
-closures.
+environment that only contains functions and immutable primitives (numbers in
+this case).  Jumping straight into a full featured programming language will
+obscure the core ideas. In a more formal setting this would be the lambda
+calculus, but I will just use TypeScript and just stay away from higher-level
+constructs like arrays. You can replace this with any run-of-the-mill
+programming language that has closures.
 
 Let's start with a very simple computation:
  
@@ -49,8 +51,8 @@ Incremental computation, ultimately, is concerned with the question how to most
 effectively re-compute `d(x, y)` when some of the inputs have changed from `1`
 and `2` to something else.
 
-Say the new computation I would like to know is `d(1, 3)`. The new inputs
-do not fully match the old ones, so a simple caching will not work as writen.
+Say the new computation I would like to execute is `d(1, 3)`. The new inputs do
+not fully match the old ones, so a simple caching will not work as written.
 
 However, instead of giving up on caching, I can break down the computation
 down to the basic operations: addition, multiplication and square root.
@@ -73,7 +75,7 @@ Compare now with the version with the new inputs.
 const op1 = 1 * 1;
 const op2 = 3 * 3;
 const op3 = op1 + op2;
-c onst op4 = Math.sqrt(op3);
+const op4 = Math.sqrt(op3);
 ```
 
 For this toy example, the best incremental computation will reuse or skip `1 *
@@ -94,7 +96,8 @@ the path in red.
 ![Recomputation graph 1](/incr3.png)
 
 Meanwhile, the recomputation for `d(-1, -1)` after `d(1, 1)` will go start with
-two red paths, but end in the middle (since the output does not change).
+two red paths, but end in the middle, since `-1^2 == 1^2` the result doesn't
+change.
 
 ![Recomputation graph 2](/incr4.png)
 
@@ -107,7 +110,7 @@ graph is:
    operation to get new outputs.
 1. repeat until there are no more changes.
 
-This algorithm has no name as it is so simple. The complexity comes in how to
+This algorithm is so simple that it has no name. The complexity comes in how to
 best build the computation graph, especially on top of general programming
 languages which have no incremental primitives.
 
@@ -115,20 +118,21 @@ The key questions around incremental computation at the abstract level of the
 computation graph will be:
 
 - how is this computation graph built?
-- how is the graph traversed. The Basic Algorithm in intentionally vague.
+- how is the graph traversed. The Basic Algorithm in intentionally vague around that.
 - can it change while the program is running?
 - what if it has cycles?
 
-The questions that I view secondary to the core and not going to explore here are:
+The questions that I view secondary to the core and not going to explore at detail:
 
-- who does the recomputation  
+- who does the recomputation
+- where is the data stored
 - can it be parallelized across different processes
 
 ## Memoization
 
-At this simple form incremental computation seems to be connected by
+At this simple form incremental computation seems to be connected to
 function memoization. Memoization is comparing the inputs of a function against
-a cache of (inputs,output) pairs. If seen, the function body is skipped and
+a cache of (inputs, output) pairs. If seen, the function body is skipped and
 output used, otherwise the function body executes and the output is stored in
 the cache.
 
@@ -138,9 +142,10 @@ a cache size of one. I view basic caching considerations - like size of cache,
 least-frequently-used vs other strategies, orthogonal to the core problems
 of incremental computation.
 
-As previously discussed, we have to first rewrite the function to separate the
-basic operations. This is known as [A-normal
-form](https://en.wikipedia.org/wiki/A-normal_form) in the compiler literature.
+In order to apply memoization to the computatation above, we have to first
+rewrite the function to separate the basic operations. This is known as
+[A-normal form](https://en.wikipedia.org/wiki/A-normal_form) in the compiler
+literature.
 
 ```javascript
 function d(x: number, y: number) {
@@ -169,8 +174,9 @@ function innerMemoD(x: number, y: number) {
 const memoD = memo(innerMemoD);
 ```
 
-However, notice that while each operation is memoized - the computation
-proceeds exactly the same way as before through the
+This is admittedly, much more efficient and but I claim it is not the end of
+the story for incremental computation. Notice that while each operation is
+memoized - the computation proceeds exactly the same way as before through the computation graph:
 
 ![Computation Graph](/incr5.png)
 
@@ -218,11 +224,11 @@ recomputing `d(-1,-1)` after `d(1, 1)`
 
 ![Recomputation graph 2](/incr4.png)
 
-But will not as writen help with recomputing `d(1, 3)` after `d(1, 1)`.
+But will not as written help with recomputing `d(1, 3)` after `d(1, 1)`.
 
 ![Recomputation graph 1](/incr3.png)
 
-We should begin to see how to achieve "full incrementality" in the computation
+You should begin to see how to achieve "full incrementality" in the computation
 graph model. At each node if all inputs are unchanged we can skip until the
 next multi-input node or end of the computation if there are none. This is
 simply a restatement of the basic algorithm using the observation that a single
@@ -272,7 +278,7 @@ const op4 = new SingleInputCmp(Math.sqrt, op3);
 op4.get();
 ```
 
-The arguments to each `*Cmp` class are a pure function to do the operation
+The arguments to each `*Cmp` class are pure functions to do the operation
 (like `square` or `add`) and one or two inputs depending on what is needed for
 the operation. The interesting part is that now the computation is described in
 code first and only afterwards "executed" in a reversed "output-to-input"
@@ -314,25 +320,25 @@ class DoubleInputCmp implements Var {
 }
 ```
 
-To make matters worse, turning the computation of this shape into incremental
-is even more involved. If we notice that `op1` and `op2` are the same and want
-to jump to the old output that would require skipping over `op3` which was on the
-function call stack. We have to keep a custom stack in order to achieve this, so
-I will leave this as an exercise to the reader. Add gist to my solution here.
+So we reshaped the computation, but did it make it easier to add
+incrementality?  As it turns out the answer is 'no'. If we notice that `op1`
+and `op2` are the same and want to jump to the old output that would require
+skipping over `op3` which was on the function call stack. We have to keep a
+custom stack in order to achieve this, so I will leave this as an exercise to
+the reader. You can see a gist to my solution (here)[https://gist.github.com/rkirov/1e002748a9794b098f39c918d191f59b].
 
-Next we will look at another transformation of the computation model -
-continuation passing style.
+Next we will look at another classic transformation of the computation model -
+[continuation passing style](https://en.wikipedia.org/wiki/Continuation-passing_style).
 
 ## Incremental Computation and Continuation Passing Style 
 
-A classic style of rewriting computations is the [continuation passing
-style](https://en.wikipedia.org/wiki/Continuation-passing_style).
-
-If you have never seen it before, it can be easily explained with a bit of
-insight from the lambda calculus on top of our previous rewriting into basic
-operations. Each variable assignment `let x = <init>; <rest>` can be writen as
-`((x) => <rest>)(<init>)`. The `(x) => <rest>` function is called __the
-continuation__.
+If you have never seen it before, it can be explained with a bit of insight
+from the lambda calculus on top of our previous rewriting into basic operations
+(the A-normal form). Each variable assignment `let x = <init>; <rest>` can be
+written as `((x) => <rest>)(<init>)`. The `(x) => <rest>` function is called
+__the continuation__. In a slight modification from traditional CSP transform
+where the continuation is further passed into all other functions, we will skip
+that part.
 
 We will do this transformation step-by-step:
 
@@ -379,7 +385,7 @@ While it will give us the correct recomputation of `d(-1,-1)` after `d(1,1)` it
 will be wrong for `d(1, 3)` after `d(1, 1)`. This is because as soon as `op1`
 is the same as before we will skip to the end, ignoring any change to `op2`.
 
-The correct rewriting for memoization requires to perserve the fact `op3` has
+The correct rewriting for memoization requires to preserve the fact `op3` has
 two inputs over which we have to memoize together. This looks like:
 
 ```typescript
@@ -413,18 +419,19 @@ one can begin to imagine a principled way of adding incrementality instead of
 manually inserting if-else statements.
 
 Also having so many memoization calls is certainly an overkill in any practical
-problem -- we are memoizing an identity function at some point, which would be
-faster to run -- but the point of pushing a simple example to the extreme is to
-see all the opportunities for incrementality.
+problem -- we are memoizing an identity function at some point! -- but the
+point of pushing a simple example to the extreme is to see all the
+opportunities for incrementality.
 
-However, notice that we still do not have incrementality for this flow: 
+However, notice that we still have the same problem as the example with manual
+`if-else` statements, we do not have incrementality for this flow: 
 
 ![Recomputation graph 1](/incr3.png)
 
 While we can "skip to the end" of the computation, we cannot skip over the
 purely `x` part of the computation graph, if we know `x` hasn't changed.
 
-While it is likely achievable with more fancy program rewriting, we will get
+It is likely achievable with more fancy program rewriting, we will get
 there by using a different technique - push-based incremental computation.
 
 ## Push vs Pull in Incremental Computation
@@ -435,8 +442,9 @@ are examples of __pull__-based computation, because the code that needs to do
 something with the numbers pulls them.
 
 There is a dual approach known as _push-based_ computation, because the new
-values of inputs, push themselves into the computation. A telltale sign of push
-vs pull is where in the type signature does the core computation type `T` appear:
+values of inputs, push themselves into the computation. A telltale sign of
+push-based computation is where in the type signature does the core computation
+type `T` appear:
 
 - pull - the methods look like `(...): T`.
 - push - the methods looks like `((x: T) => ...): ...`.
@@ -578,27 +586,28 @@ library in OCaml
 [https://blog.janestreet.com/introducing-incremental/.](https://blog.janestreet.com/introducing-incremental/)
 
 If you are wondering if there is such thing as a reversed push-based
-computation, indeed I have an example of it here (add gist here).
+computation, that's another thing I am leaving to the reader. Spoiler it
+doesn't appear to be nicer than the direct push-based style.
 
 ## Connection with Reactive / Streaming frameworks
 
 If you are familiar with reactive primitives like - streams, observables, etc,
-you might have observed that the 'push-based' solution, can be much simpler by
-using them. For example, here is the same computation, using rxjs observables.
-To be fully equivalent it will need to add caching along each observable, so
-that it doesn't reemit when the new value equals the previous one.
+you might have observed that the 'push-based' code is starting to look like
+one. That is absolutely correct, here is the same computation,
+using rxjs observables.
 
 ```typescript
 import {of, combineLatest, Subject} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, distinctUntilChanged} from 'rxjs/operators';
 
 const x = new Subject<number>();
 const y = new Subject<number>();
 
-const op1 = x.pipe(map(square));
-const op2 = y.pipe(map(square));
-const op3 = combineLatest(op1, op2).pipe(map(([x, y]) => add(x, y))); 
-const op4 = op3.pipe(map(Math.sqrt));
+const op1 = x.pipe(map(square), distinctUntilChanged());
+const op2 = y.pipe(map(square), distinctUntilChanged());
+const op3 = combineLatest(op1, op2).pipe(map(([x, y]) => add(x, y)),
+    distinctUntilChanged()); 
+const op4 = op3.pipe(map(Math.sqrt), distinctUntilChanged());
 
 op4.subscribe(console.log);
 
@@ -612,6 +621,12 @@ y.next(-1);
 console.log('re-computation of with new x');
 x.next(3);
 ```
+
+So is incremental computation the same as reactive programming? The way I see
+it reactive programming with streams can solve many problems of which
+incremental computation is just one of. As we shall see as we go along
+incremental computation does not need the full power of Rxjs reactive
+primitives.
 
 ## Build systems and incremental computation
 
@@ -670,22 +685,25 @@ cat op4
 3.1622776601683795
 ```
 
-As make prints out the operations it performs, it is clear that `op1` is skipped 
-as its inputs have not changed. It is worth mentioning that build systems
-usually use file time stamps as check whether something has changed or not, 
+As `make` prints out the operations it performs, it is clear that `op1` is skipped 
+when its inputs have not changed. It is worth mentioning that build systems
+usually use file timestamps as check whether something has changed or not, 
 which can result in less incrementality when using inputs like `-1` that are
 equivalent to `1` after squaring.
 
-In terms of the characteristics we described earlier, make performs a reverse
-pull-based computation. We start with the final output `op4` (reverse) and each
-file is directly read (pull-based) instead of using a file watch mechanism for
-each file to pass it contents into the next operation.
+In terms of the characteristics we described earlier, `make` looks like a
+reverse pull-based computation. We start with the final output `op4` (reverse)
+and each file is directly read (pull-based) instead of using a file watch
+mechanism for each file to pass it contents into the next operation.
 
-One can say that incremental computation is a way of turning your general
-programs into build systems.
+Since, build systems are most successful implementations of incremental
+computations, one can say that incremental computation is a way of turning your
+general programs into small build systems.
 
 ## Onto part 2 
 
 The next challenge is to extend the toy computation model to a full blown
 language that includes control flow and mutable object. We will begin with
 control flow.
+
+[Continue to part 2 of the post](/posts/incremental_computation_2)
