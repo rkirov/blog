@@ -7,7 +7,7 @@ title = "Rado's Radical Reflections"
 
 # Welcome
 
-This is just a corner of the web where I post my thoughts on software, math, puzzle, life, and anything else that might spark my interest at the moment.
+This is my corner of the web where I share thoughts on software, mathematics, puzzles, life, and anything else that sparks my interest.
 
 ---
 
@@ -21,4 +21,4 @@ See all [posts](/posts/)
 
 ---
 
-There intentionally no comment sections, but if you would like to converse with me on any of the topics above, don't hesitate to reach out to rkirov@gmail.com or [x.com/radokirov](https://x.com/radokirov).
+There are intentionally no comment sections, but if you'd like to discuss any of these topics, feel free to reach out to me at rkirov@gmail.com or [x.com/radokirov](https://x.com/radokirov).
