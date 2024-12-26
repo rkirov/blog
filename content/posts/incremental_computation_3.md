@@ -13,8 +13,8 @@ Maybe you wondering why did I use TypeScript for this post. As it happens I
 have been working in the frond-end community in the last 8 years. My interest
 in incremental computation started by observing the similarities between some
 of the work I have done inside Angular's "change detection" algorithms, and
-work I have done around integrating TypeScript's compiler in (Google's build
-system)[https://bazel.build/].
+work I have done around integrating TypeScript's compiler in [Google's build
+system](https://bazel.build/).
 
 ## UI programming 
 

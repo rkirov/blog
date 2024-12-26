@@ -2,6 +2,6 @@
 	path = public
   url = git@github.com:rkirov/rkirov.github.io.git
 	branch = master
-[submodule "themes/fuji"]
-	path = themes/fuji
-	url = https://github.com/amzrk2/hugo-theme-fuji.git
+[submodule "themes/hugo-bearblog"]
+	path = themes/hugo-bearblog
+	url = https://github.com/janraasch/hugo-bearblog.git
