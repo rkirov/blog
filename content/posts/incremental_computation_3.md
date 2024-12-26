@@ -1,5 +1,5 @@
 +++
-title = "Incremental Computation (Draft of part 3)"
+title = "Incremental Computation (part 3)"
 date = 2020-05-19
 images = []
 tags = ['incremental computation']
