@@ -17,11 +17,11 @@ After a couple of hours the AI and I produced the following analyses:
 
 1. The 32 tickets in the game can be categorized by their optimal paths:
 
-- 3 tickets (best) requiring 3 trains and 1 intermediate city
-- 11 tickets requiring 4 trains and 1 intermediate city
-- 5 tickets requiring 4 trains and 2 intermediate cities
-- 6 tickets requiring 5 trains and 1 intermediate city
-- 7 tickets (worst) requiring 5 trains and 2 intermediate cities
+    - 3 tickets (best) requiring 3 trains and 1 intermediate city
+    - 11 tickets requiring 4 trains and 1 intermediate city
+    - 5 tickets requiring 4 trains and 2 intermediate cities
+    - 6 tickets requiring 5 trains and 1 intermediate city
+    - 7 tickets (worst) requiring 5 trains and 2 intermediate cities
 
 1. The probability distribution for game completion time in single-player mode (assuming reasonably good strategy) is roughly:
     - 13% of games finish < 21 turns
@@ -115,5 +115,5 @@ but the mode of engagement will shift from authoring directly, to reading and di
 
 If the future of programming looks like that, technical interviews and software engineering education will have to also adapt and answer:
 
-- How do we assess candidates' ability to guide and refine AI-generated code? Why do we still ban AI usage in all tech hiring?
+- How do we assess candidates' ability to guide and refine AI-generated code? Why do we still ban AI usage in all tech interviews?
 - Should programming education still begin with manual coding, or should we develop new pedagogical approaches that include AI earlier? Should there be an underpowered version of AI that grows in power as one progresses in their education?
