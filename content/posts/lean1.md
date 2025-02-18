@@ -25,13 +25,13 @@ I am trying to follow the ethos of "learning in public," but these are still mor
 As such, this post will be most useful for people with a similar background as mine. A quick summary of where I am as I begin this journey:
 
 - formally trained as a mathematician up to the PhD level. I successfully passed my qual exams and defended my PhD. I am most familiar with algebra, number theory, and combinatorics subfields.
-- failed to become a research mathematician after one year of postdoc, and in the last 15 years, I have worked as a software engineer.
+- failed to become a research mathematician after one year of postdoc. In the last 15 years, I have worked as a software engineer, mostly in web front-end.
 - a deep interest in programming languages and worked briefly with compilers and PL tools - specifically in JavaScript and TypeScript and toyed around with 20+ languages.
 - not studied PL theory, type theory, logic, or mathematical foundations (though have read bits and pieces.)
 
 One curious consequence of formalization is that most mathematicians do not care about foundations and the fuzziness of informal mathematics lets them get away with it. But when working on the formalization of mathematics, one has to deal a bit more seriously with foundations basically from day one. So my lack of formal CS Type Theory/Mathematics Foundations knowledge is slowing down my learning of Lean somewhat, but then again a good way to learn more about those.
 
-Kind of ironically, math and programming do meet eventually and become the "same thing" (Curry-Howard isomorphism), but the level at which they meet goes through less popular areas each. For math, it is axiomatic foundations and for programming it is FP and dependent type theory. So despite spending 20+ years combined on math and programming, I still only have roughly ~70% of the prerequisites needed to even begin understanding the formalization of mathematics.
+Math and programming do meet eventually and become the "same thing" (Curry-Howard isomorphism), but ironically the level at which they meet goes through less popular areas each. For math, it is axiomatic foundations and for programming it is FP and dependent type theory. So despite spending 20+ years combined on math and programming, I still only have roughly ~70% of the prerequisites needed to even begin understanding formalization of mathematics.
 
 An analogy I was toying with in my head is if I want to engage with a classic foreign language book like [I_Ching](https://en.wikipedia.org/wiki/I_Ching) one needs to know:
 
@@ -102,7 +102,7 @@ So depending on the syntactic position `a` could stand for `(a: \alpha)` or `(aa
 
 My first interaction with Lean was broken for a bit due to numeric literals being objects in type classes. Reminded me of my first experience with Haskell close to 20 years ago, which involved typing `let x = 1` and getting an inscrutable error. Much later, I learned it has to do with the same design decision.
 
-While it is very defensible and beautiful to be able to use a general solution like type classes for literals, to a newcomer it feels inverted - literals feel simple, while type classes are fancy. For example, I started experimenting with numbers after reading chapter 2, while type classes are explained in chapter 10, so I got type class errors before technically I knew anything about type classes. 
+While it is very defensible and beautiful to be able to use a general solution like type classes for literals, to a newcomer it feels inverted - literals feel simple, while type classes are fancy. For example, I started experimenting with numbers after reading chapter 2, while type classes are explained only in chapter 10. So I got some literal type class errors, before technically I knew anything about type classes. 
 
 My past experience with Haskell helped, but I wonder how many newcomers (say mathematicians that have written a bit of numeric python) get lost around this.
 
@@ -115,7 +115,7 @@ In theory, something like implicit arguments and the `variable` command should b
 ## My remaining questions
 
 - when are two things definitionally equal vs I have to write a proof. Basically, I just try `rfl` and if it doesn't work get to proving, but I wonder if experts have an intuitive understanding of what should work before trying.
-- Prop vs Decidable - vaguely understand the distinction but can use more examples. Also how this relates to the `noncomputable` property.
+- Prop vs Decidable - I vaguely understand the distinction, but can use more examples. Also would like to know does this relate to the `noncomputable` property.
 - #eval vs #reduce - what's the difference? Feels like two different evaluation models.
 - relative power of Lean proof-based simplifications (using `simp`) compared to CAS like Mathematica and SymPy that also have `simplify` but as a black box procedure.
 
@@ -123,7 +123,7 @@ These will likely become clearer as I continue to experiment with Lean.
 
 ## Final words
 
-As said in the beginning [chapter 8](https://Leanprover.github.io/theorem_proving_in_Lean4/structures_and_records.html)
+As stated in the beginning [chapter 8](https://Leanprover.github.io/theorem_proving_in_Lean4/structures_and_records.html)
 
 >  We have, moreover, noted that it is a remarkable fact that it is possible to construct a substantial edifice of mathematics based on nothing more than the type universes, dependent arrow types, and inductive types; everything else follows from those. 
 
