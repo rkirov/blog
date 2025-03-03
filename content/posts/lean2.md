@@ -4,7 +4,7 @@ date: 2025-03-02T07:14:48-08:00
 draft: false
 ---
 
-I am continuing to learn Lean (see [part 1](/lean1)) by going through
+I am continuing to learn Lean (see [part 1](/posts/lean1)) by going through
 [Mathematics in Lean](https://leanprover-community.github.io/mathematics_in_lean). These are my notes as I just finished chapters one through five.
 
 ## Mathematics in Lean
@@ -13,7 +13,7 @@ The online book is well-paced and well-written to connect with what an average s
 are constructed as an inductive type with zero and succ constructors is shown much after one is shown how to work with them. This is aligned with how a lot of mathematics is done before one discusses foundations in a typical mathematics curriculum, which might differ from a CS one.
 
 I especially enjoyed doing the multiple exercises in each section. They are really well interspersed within the text and well-balanced to keep one at the edge of their current skill. The "gamification" really works for me, and it turns learning Lean into just another puzzle similar to
-the [puzzle games](/puzzles2024) I enjoy. It makes me very bullish on using Lean as an educational tool.
+the [puzzle games](/posts/puzzles2024) I enjoy. It makes me very bullish on using Lean as an educational tool.
 
 ## Beginner gotchas
 
