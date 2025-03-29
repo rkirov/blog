@@ -325,7 +325,7 @@ incrementality?  As it turns out the answer is 'no'. If we notice that `op1`
 and `op2` are the same and want to jump to the old output that would require
 skipping over `op3` which was on the function call stack. We have to keep a
 custom stack in order to achieve this, so I will leave this as an exercise to
-the reader. You can see a gist to my solution (here)[https://gist.github.com/rkirov/1e002748a9794b098f39c918d191f59b].
+the reader. You can see a gist to my solution [here](https://gist.github.com/rkirov/1e002748a9794b098f39c918d191f59b).
 
 Next we will look at another classic transformation of the computation model -
 [continuation passing style](https://en.wikipedia.org/wiki/Continuation-passing_style).
@@ -581,9 +581,8 @@ the minimum needed work. The downside of this approach is that batch updates,
 meaning change a number of inputs and then recompute are harder to implement.
 
 Push-based computations appears naturally easier for incrementality. The same
-observation was made by Yaron Minksy in his excellent blog on the Incremental 
-library in OCaml
-[https://blog.janestreet.com/introducing-incremental/.](https://blog.janestreet.com/introducing-incremental/)
+observation was made by Yaron Minksy in his excellent [blog on the Incremental 
+library in OCaml.](https://blog.janestreet.com/introducing-incremental/)
 
 If you are wondering if there is such thing as a reversed push-based
 computation, that's another thing I am leaving to the reader. Spoiler it

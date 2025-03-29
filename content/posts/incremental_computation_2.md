@@ -519,8 +519,7 @@ and methods that have to be supported.
 
 At the extreme there are fully custom data structures that support very
 efficient results to a fixed set of computations, after small changes. This
-work of Tarjan is representative - [A Data Structure for Dynamic Trees]
-(https://www.cs.cmu.edu/~sleator/papers/dynamic-trees.pdf). One of the
+work of Tarjan is representative - [A Data Structure for Dynamic Trees](https://www.cs.cmu.edu/~sleator/papers/dynamic-trees.pdf). One of the
 original goals of research of incremental computation was to automatically
 derive these type of structures through incrementalizing the classical
 algorithms, instead of incremenlizing them one by one.
