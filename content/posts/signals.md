@@ -23,7 +23,7 @@ signals are not FRP according the precise semantics of that work. What JS ecosys
 (Aside, if you already know FRP you can learn more about the similarities and differences with SAC in this Jane Street [blog post](https://blog.janestreet.com/breaking-down-frp/).)
 
 Speaking of words, "incremental" and "self-adjusting" are not used in the JS ecosystem, but rather "reactivity", undoubtedly
-due to React's popularity, which ironically is not [fully reactive](https://braythwayt.com/posterous/2012/11/01/programming-is-a-pop-culture.html).
+due to React's popularity, which ironically is not [fully reactive](https://dev.to/this-is-learning/how-react-isn-t-reactive-and-why-you-shouldn-t-care-152m).
 
 It remains to be seen if JS signals just the latest fad ([programming is pop culture](https://braythwayt.com/posterous/2012/11/01/programming-is-a-pop-culture.html) after all) or truly a better approach to UI reactivity that would outlast the latest framework churn, but in this post I want to emphasize again the connection with SAC that transcends language of implementation and use-case.
 
@@ -31,11 +31,11 @@ It remains to be seen if JS signals just the latest fad ([programming is pop cul
 
 There are three notable implementations of self-adjusting computation:
 
-1. original OCaml implemenation from the Ucar et.al. I haven't looked into that too much, other than reading the original papers.
+1. original OCaml implementation from the Ucar et.al. I haven't looked into that too much, other than reading the original papers.
 1. haskell implementation with monads based on the [paper by Magnus Carlsson.](https://www.researchgate.net/publication/221241270_Monads_for_incremental_computing) I understood this enough to rewrite it in [TS.](https://github.com/rkirov/adapt-comp)
 1. Jane Streets modern [Incremental.](https://github.com/janestreet/incremental) The connection with UIs is understood and utilized here first [blog.](https://blog.janestreet.com/introducing-incremental/)
 
-Here is an example of SAC directly from Jane Street's Incremental [blog post](https://blog.janestreet.com/introducing-incremental/).
+Here is an example of SAC directly from Jane Street's Incremental blog post.
 Don't worry if you can't read OCaml for now.
 
 ```ocaml
