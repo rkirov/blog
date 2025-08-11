@@ -6,7 +6,7 @@ draft: false
 
 I am continuing to learn Lean (see [part 1](/posts/lean1) and [part 2](/posts/lean2)). I lost some steam around March-April, but in the last
 two months I picked it up again. In a way it was a nice spaced repetition for relearning some of the basics. This summary was supposed to be my notes from finishing the rest of [Mathematics in Lean](https://leanprover-community.github.io/mathematics_in_lean) and finishing chapters 2 and 3 of exercises from [Terence Tao's Analysis textbook](https://github.com/teorth/analysis), but also I couldn't help also comment on the challenges and 
-opportunties I see in doing formal mathematics with Lean as I see them.
+opportunties I see in doing formal mathematics with Lean.
 
 ## Thoughts on Mathematics in Lean
 
@@ -169,7 +169,7 @@ some particular new Lean tricks. I am getting a feeling that my bag of tricks is
 basic proofs any longer. The next level of learning is how to write idiomatic and clean proofs.
 
 The tricks and gotchas I learned:
-- be very clean when working within `Type` or `Prop`. Certain things are only allowed for `Prop`, like `obtain`.
+- be very clear when working within `Type` or `Prop`. Certain things are only allowed for `Prop`, like `obtain`.
 - Every `Classical.choose` needs a matching `choose_spec` to work with. Using `generalized_proofs` allows one to pull
   the proofs in scope.
 - If `rw` fails due to the `motive` error (often the thing you are trying to rewrite is used inside other types, etc), try 
@@ -197,6 +197,6 @@ don't be offput by the Analysis title, at least the first four chapters are equa
 I am totally sold on formal proofs as the future of mathematics. Lean has the most 
 momentum at the moment, including an active and welcoming community and I see no reason to try to learn other alterantives like Isabelle or Coq at the moment.
 
-Formal mathematics, i.e. don't proofs with a computer, is especially beneficial to hobbyists like me. I hope one day these are prevalent enough so we drop "formal" and just call them proofs, like how we don't need to say "computer-aided computation" to differentiate from computation we run in our brains instead of on silicon.
+Formal mathematics, i.e. checking proofs with a computer, is especially beneficial to hobbyists like me. I hope one day these are prevalent enough so we drop "formal" and just call them proofs, like how we don't need to say "computer-aided computation" to differentiate from computation we run in our brains instead of on silicon.
 
 P.S. This post was too long. Thank you for reading if you got so far. I do need to blog more often in smaller chunks.
