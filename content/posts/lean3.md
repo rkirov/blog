@@ -197,6 +197,6 @@ don't be offput by the Analysis title, at least the first four chapters are equa
 I am totally sold on formal proofs as the future of mathematics. Lean has the most 
 momentum at the moment, including an active and welcoming community and I see no reason to try to learn other alterantives like Isabelle or Coq at the moment.
 
-Formal mathematics, i.e. checking proofs with a computer, is especially beneficial to hobbyists like me. I hope one day these are prevalent enough so we drop "formal" and just call them proofs, like how we don't need to say "computer-aided computation" to differentiate from computation we run in our brains instead of on silicon.
+Formal mathematics, i.e. checking proofs with a computer, is especially beneficial to hobbyists like me. I hope one day these are prevalent enough so we drop "formal" and just call them proofs, like how we don't need to say "computer-aided computation" to differentiate computation we run on silicon instead of our limitted brains.
 
 P.S. This post was too long. Thank you for reading if you got so far. I do need to blog more often in smaller chunks.
