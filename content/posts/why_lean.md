@@ -4,6 +4,8 @@ date: 2025-10-16T22:32:49-07:00
 draft: false
 ---
 
+# Why formalize mathematics - more than catching errors
+
 I read a good [post](https://lawrencecpaulson.github.io/2025/10/15/Proofs-trivial.html) by one of the authors of the Isabelle theorem prover, that got me thinking. The author, Lawrence Paulson, observed that most math proofs are trivial, but writing them (preferably with a proof assistant) is a worthwhile activity, for reasons similar to safety
 checklists - "Not every obvious statement is true."
 
