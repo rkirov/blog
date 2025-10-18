@@ -20,7 +20,7 @@ To understand these benefits let me begin by sharing a parallel from my engineer
 
 TypeScript is an optional static type system for JavaScript (a dynamic language without static types). Very briefly,
 when writing TypeScript, one is roughly writing JavaScript with some extra annotations - types. Those are checked by the TypeScript compiler, as part of the compilation / build process. If the type annotations are not consistent - say you
-said the function `f` expects a `number` but somewhere you also wrote `f('foo')` an error will be thrown. If no such
+said the function `f` expects a `number` but somewhere you also wrote `f('foo')` an error will be emitted. If no such
 errors are found, the type annotations are erased and JavaScript is emitted for further execution.
 
 It seems all TypeScript is good for is catching errors and rejecting your programs. So when we went around Google pitching
@@ -30,7 +30,7 @@ is due to JavaScript being mainly used for UIs, so worst case scenario one often
 
 If correctness wasn't that big of a deal (especially over established codebases) what good is this type-checking? As I learned more about it, the following benefits emerged: 
 
-- TypeScript types power IDEs - turns out whatever the correctness checker needs to connect say the definition of `f` and
+- TypeScript types power other tools - turns out whatever the correctness checker needs to connect say the definition of `f` and
 all call sites to verify that the arguments match the parameter signatures, is the same thing developer tooling needs to
 allow you to CTRL-click to definition, find all usages, refactor, etc.
 - TypeScript types are a design language - once you get familiar enough one can use them as an initial language to spec
@@ -42,7 +42,7 @@ one is not doing TDD and writing tests first, and the project is not too large w
 
 So by analogy, formalizing math with Lean has the following similar benefits outside correctness and assistance in writing proofs.
 
-- powering math IDEs - instead of just writing LaTeX, and keeping all definitions in one's head, with Lean one gets the
+- powering various math tools - instead of just writing LaTeX, and keeping all definitions in one's head, with Lean one gets the
 very basic IDE support every programmer expects, but no informal mathematician gets - click-through definitions, hover over statements, auto-generated docs (like [mathlib4_docs](https://leanprover-community.github.io/mathlib4_docs/)), non-string searching, refactoring, etc. For example, the [Stacks Project](https://stacks.math.columbia.edu/) is a very useful attempt to get
 some of these benefits without formalization, but formalization basically guarantees that every part of mathematics can
 generate something like this.
