@@ -17,6 +17,7 @@ My most notable posts:
 - [Learning Lean (part 2)](/posts/lean2)
 - [Learning Lean (part 3)](/posts/lean3)
 - [Learning Lean (part 4)](/posts/lean4)
+- [Why formalize mathematics - more than catching errors](/posts/why_lean)
 - [Incremental Computation (part 1)](/posts/incremental_computation)
 - [Incremental Computation (part 2)](/posts/incremental_computation_2)
 - [Incremental Computation (part 3)](/posts/incremental_computation_3)
