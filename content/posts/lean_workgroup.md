@@ -4,6 +4,8 @@ date: 2026-02-01T14:04:19-08:00
 draft: false
 ---
 
+# San Francisco Math with Lean Workgroup Retro
+
 I started learning formalized mathematics with Lean last year [1](../lean1), [2](../lean2), [3](../lean3), [4](../lean4). As I progressed beyond basics, it dawned on me that I need to start interacting with the broader community as Lean is rapidly evolving and beyond basic getting started guides there aren't as many high-quality resources to learn solo. It could also be a great way to meet folks with similar interests and build more social connections. To that end I tried to start a local workgroup around Oct'25 [details](https://github.com/rkirov/analysis/blob/main/analysis/Analysis/Section_5_epilogue.lean). I have never done anything like this before, so this is a small retro of how it went so far (in Jan'26) and what's next.
 
 ## Vision
