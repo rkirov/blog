@@ -68,7 +68,7 @@ Step 8 deserves more attention, because it turned out to be surprisingly educati
 
 And it's iterative. Claude does something I don't like, and instead of just fixing it, I ask whether this is a one-off or a pattern. If it's a pattern, it becomes a rule. Over time the CLAUDE.md becomes a document of my evolving Lean taste — a style guide for formalization that I authored through friction with the tool.
 
-The irony is that this is one of the places where the AI workflow teaches me *more* about proof engineering than working alone would. Solo, my standards stay implicit. Having to communicate them to an agent forces clarity. And the resulting proofs end up more distinctly *mine* — shaped by my preferences, my aesthetic, my opinions about what good formalization looks like — than they would be if I were just following whatever path the tactics led me down.
+The irony is that this is one of the places where the AI workflow teaches me *more* about proof engineering than working alone would. Solo, my standards stay implicit. Having to communicate them to an agent forces clarity. And the resulting proofs end up more distinctly *mine* — shaped by my preferences, my aesthetic, my opinions about what good formalization looks like — than a more adhoc and unreasoned output if I wasn't force to write them.
 
 ## Looking forward
 
