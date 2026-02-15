@@ -11,13 +11,17 @@ This is my corner of the web where I share thoughts on software, mathematics, pu
 
 ---
 
-My most notable posts:
+Lean series:
 
 - [Learning Lean (part 1)](/posts/lean1)
 - [Learning Lean (part 2)](/posts/lean2)
 - [Learning Lean (part 3)](/posts/lean3)
 - [Learning Lean (part 4)](/posts/lean4)
 - [Why formalize mathematics - more than catching errors](/posts/why_lean)
+- [From Sets in Math to Types in Lean: Subtype, Fin, Set, Finset, and Fintype](/posts/sets-vs-types)
+
+Other posts:
+
 - [Incremental Computation (part 1)](/posts/incremental_computation)
 - [Incremental Computation (part 2)](/posts/incremental_computation_2)
 - [Incremental Computation (part 3)](/posts/incremental_computation_3)
