@@ -1,9 +1,10 @@
 ---
-title: "Update on Real Analysis with Lean and Claude"
+title: "Human Intuition, AI Formalization: A Real Analysis Case Study"
 date: 2026-03-08T23:35:37-07:00
 draft: false
 ---
 
+# Human Intuition, AI Formalization: A Real Analysis Case Study
 
 *Disclaimer* - I wrote the core ideas; Claude helped flesh out and polish the article. See [appendix](#appendix-on-ai-assisted-writing) for more on this.
 
@@ -48,7 +49,7 @@ Here is how I approached this:
 
 - **Learning** - Part 10 of the proof, I am stuck. I ask Claude to explain what is happening in words, convince myself on paper conceptually, then read the proof and agree it makes sense. This is tricky indeed. I ask to refactor a bit and add better comments matching my understanding, which I relay back to Claude as another intuition sketch.
 
-- **Cleanup** - I ask Claude to clean up the whole thing and commit. The result is [300+ lines of lean](https://github.com/rkirov/analysis/blob/main/analysis/Analysis/Section_8_2.lean#L843-L1182). I guess to both the uninitiated in Lean and the Lean expert, it looks like slop (for different reasons). But through this process, to me it is a formal proof that I roughly follow.
+- **Cleanup** - I ask Claude to clean up the whole thing and commit. The result is [300+ lines of lean](https://github.com/rkirov/analysis/blob/main/analysis/Analysis/Section_8_2.lean#L843-L1182). I guess to both the uninitiated in Lean and the Lean expert, it looks like slop (for different reasons). But through this process, to me it is a formal proof that I roughly follow and can stand by.
 
 ## Followup problem 8.2.6 - divergence after rearrangement
 
@@ -66,7 +67,7 @@ This is the picture I had in my mind:
 
 ## Summary
 
-I am surprisingly happy with this workflow and plan to keep charging ahead until I complete the Real Analysis exercises (likely another month or so). If I used Claude less I likely would have learned more, but at the expense of 10x of my time, it doesn't feel like the right tradeoff right now. I am happy that I can still engage the material on an intuition level. After the iteration we did, I feel the resulting lean proof is *our* proof not just Claude's output. Admittedly I did much less work, but feel more like a collaborator than say a principal researcher whose name is on the paper because he provided the money (I did pay for the Claude $100/month subscription.)
+I am surprisingly happy with this workflow and plan to keep charging ahead until I complete the Real Analysis exercises (likely another month or so). If I used Claude less I likely would have learned more about Lean and mathlib, but at the expense of 10x of my time, it doesn't feel like the right tradeoff right now. I am happy that I can still engage the material on an intuition level. After the iteration we did, I feel the resulting lean proof is *our* proof not just Claude's output. Admittedly I did much less work, but feel more like a collaborator than say a principal researcher whose name is on the paper because he provided the money (I did pay for the Claude $100/month subscription.)
 
 As Terence Tao says in [his interview](https://www.theatlantic.com/technology/2026/02/ai-math-terrance-tao/686107/):
 
@@ -79,7 +80,9 @@ Practically, when using AI for writing Lean the two extremes are represented by:
 
 I believe I am finding a nice middle ground through my usage of Claude and Lean.
 
-When I was in grad school I had a repeated feeling of being unable to see the forest from the trees. I was grinding through definitions and proofs with no intuition in sight, until I left academia altogether. In the new human / LLM / Lean collaborative math world, I feel I can stay more fully in the intuitive level, converse on that level with the LLM, which can then translate it to the formal Lean level (paying the high time cost of that conversion instead of using my human time) and bring back any missing insight to me. Finally, I know enough of Lean to spot check the formal level, but I'm not required to fully (especially outside definitions). I can dream up math ideas, while Claude can ground them in Lean, I don't see it as a bad development.
+When I was in grad school I had a repeated feeling of being unable to see the forest from the trees. I was grinding through definitions and proofs with no intuition in sight, until I left academia altogether. In the new human / LLM / Lean collaborative math world, I feel I can stay more fully in the intuitive level, converse on that level with the LLM, which can then translate it to the formal Lean level (paying the high time cost of that conversion instead of using my human time) and bring back any missing insight to me. Finally, I know enough of Lean to spot check the formal level, but I'm not required to fully (especially outside definitions).
+
+I can dream up math ideas, while Claude can ground them in Lean and come back to me with the logical reality. I don't see this as a bad development.
 
 ## Appendix: Riemann's original proof
 
@@ -87,8 +90,12 @@ I thought it would be curious to see how Riemann actually proved it — [origina
 
 > The insight into the path to be taken in solving this problem came to him from the recognition that infinite series fall into two essentially different classes, depending on whether they remain convergent or not when all terms are made positive. In the former, the terms may be arbitrarily rearranged; the value of the latter, by contrast, depends on the ordering of the terms. Indeed, if in a series of the second class one denotes the positive terms in succession by a₁, a₂, a₃, …, and the negative ones by −b₁, −b₂, −b₃, …, it is clear that both Σa and Σb must be infinite; for if both were finite, the series would still converge after making all signs equal; but if one were infinite, the series would diverge. Now it is evident that the series can, by a suitable arrangement of its terms, be made to equal any arbitrarily given value C. For if one takes alternately positive terms of the series until their sum exceeds C, and then negative terms until their sum falls below C, the deviation from C will never be greater than the value of the term preceding the last change of sign. Since now both the quantities a and the quantities b ultimately become infinitely small as the index grows, the deviations from C will also, if one goes far enough in the series, become arbitrarily small — that is, the series will converge to C. Only to series of the first class are the laws of finite sums applicable; only they can truly be regarded as representing the totality of their terms — series of the second class cannot; a circumstance that was overlooked by the mathematicians of the previous century, mainly, it seems, because the series that proceed in ascending powers of a variable quantity belong, generally speaking (that is, with the exception of particular values of that quantity), to the first class.
 
-Curiously, if one classifies the three levels of proof rigor - 1) my handwavy intuition proof sketch 2) proper paper math as taught in current math classes 3) formal Lean math, Riemann's proof is closest to 1) — of course, it was 150 years ago. While we adopted a much stricter notion of proofs (level 2) to root out logical issues, I feel something got lost. With this new workflow, my proof writing is surprisingly similar to Riemann's notes of the past.
+Curiously, Riemann's proof reads more like my handwavy intuition sketches than a modern textbook proof — of course, it was 150 years ago. We've since adopted much stricter standards of rigor, and rightly so, but I feel something got lost in the process. With this new human + AI + Lean workflow, I find myself writing proofs at Riemann's level of intuition again, while Claude and Lean handle the formal details. It feels like coming full circle.
+
+[Back to top](#human-intuition-ai-formalization-a-real-analysis-case-study)
 
 ## Appendix: On AI-assisted writing
 
-As an experiment I am leaving the initial pre-AI edits [draft](../lean6-raw). I both empathise with readers tricked into reading low-signal but plausibly looking one-shotted articles, but also benefit from the efficiency provided by Claude fleshing out my blog outlines quickly and effortlessly. So hope the raw outline dump convinces readers this is not a low-quality one-shot post. Feedback welcome, we are all trying to figure out how this brave new world should work!
+As an experiment I am leaving the initial pre-AI edits [draft](../lean6-raw). I empathise with readers who are tired of plausible-looking but low-signal AI-generated articles. At the same time, I benefit from Claude's efficiency in fleshing out my outlines. The raw draft should make clear this is not a one-shot post. Feedback welcome, we are all trying to figure out how this brave new world should work!
+
+[Back to top](#human-intuition-ai-formalization-a-real-analysis-case-study)

@@ -20,7 +20,7 @@ Lean series:
 - [Why formalize mathematics - more than catching errors](/posts/why_lean)
 - [From Sets in Math to Types in Lean: Subtype, Fin, Set, Finset, and Fintype](/posts/sets-vs-types)
 - [Leaning on AI](/posts/lean5)
-- [Update on Real Analysis with Lean and Claude](/posts/lean6)
+- [Human Intuition, AI Formalization: A Real Analysis Case Study](/posts/lean6)
 
 Other posts:
 
