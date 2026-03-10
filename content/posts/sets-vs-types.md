@@ -3,6 +3,7 @@ title: "From Sets in Math to Types in Lean: Subtype, Fin, Set, Finset, and Finty
 date: 2026-02-14T20:54:04-08:00
 draft: false
 ---
+# From Sets in Math to Types in Lean: Subtype, Fin, Set, Finset, and Fintype
 
 ## Preface: Why All Mathematicians Should Learn Lean
 
@@ -36,7 +37,7 @@ In math, you might say "let `n` be an *even* natural number" and move on. Implic
 
 Lean resolves this by pairing each value with a proof that it satisfies some property. This is called a **subtype** and the syntax is `{n : ℕ // Even n}`, and an element is a pair — the value `x.val : ℕ` and a proof `x.prop : Even x.val`.
 
-A key example is `Fin n`, the type of natural numbers less than `n`. It is defined as `{i : ℕ // i < n}` — a subtype of `ℕ`. When you write `i : Fin 5`, `i.val` is the underlying natural number and `i.prop` is a proof that `i.val < 5`.
+A key example is `Fin n`, the type of natural numbers less than `n`. It can be thought of as `{i : ℕ // i < n}` — a subtype of `ℕ` (though techincally defined though different means). When you write `i : Fin 5`, `i.val` is the underlying natural number and `i.prop` is a proof that `i.val < 5`.
 
 Subtypes are distinct from their parent type. `(0 : ℕ)` and `(⟨0, by decide⟩ : Fin 5)` are different objects with different types. Lean provides coercions — if `i : Fin 5`, you can use `i` where a `ℕ` is expected and Lean inserts `↑i` — but this can still surprise newcomers when type mismatches appear.
 
