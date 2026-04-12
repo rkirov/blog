@@ -4,8 +4,6 @@ date: 2026-02-08T21:16:11-08:00
 draft: false
 ---
 
-# Leaning on AI
-
 It's been five months since my last dedicated [Lean post](../lean4) and as usual I have started to lose steam on Lean projects. After the thrill of discovering the world of formalized mathematics started to wear off, I did not find motivation to push as hard as before. The SF Math with Lean work group kept me vaguely connected (at least in the one hour a week we meet [(see retro)](../lean_workgroup)) but other than that I wasn't putting in more than a few hours a week on math and Lean.
 
 So when I tried to get back into working through Tao's companion chapter 6, I had a rough awakening - while I remembered roughly my way around Lean tactics, I seem to have forgotten most of mathlib theorem names. Grinding through chapter 6 felt even harder and more chore-ish than before.

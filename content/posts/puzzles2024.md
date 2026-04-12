@@ -1,11 +1,9 @@
 ---
-title: "Puzzles2024"
+title: "Puzzle games of 2024"
 date: 2024-12-31T11:42:13-08:00
 tags: ['puzzles']
 draft: false
 ---
-
-# Puzzle games of 2024
 
 As the year draws to a close, I want to share my favorite puzzle games from 2024. This isn't meant to be an exhaustive review or ranking of all puzzle games released this year, but rather a personal reflection on the games that captured my attention. If you're new to the puzzle genre, I recommend starting with the [essential thinky games list](https://thinkygames.com/games/?query=&released=true&essential=true&sortBy=-releaseDate) - all of those titles are excellent.
 

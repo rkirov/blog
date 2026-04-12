@@ -4,8 +4,6 @@ date: 2026-03-08T23:35:37-07:00
 draft: false
 ---
 
-# Human Intuition, AI Formalization: A Real Analysis Case Study
-
 *Disclaimer* - I wrote the core ideas; Claude helped flesh out and polish the article. See [appendix](#appendix-on-ai-assisted-writing) for more on this.
 
 This is a follow up to my [previous post](../lean5) on leaning on Claude for Lean. I've now worked up to chapter 8.3 in Tao's companion. The speed is great and Claude's capabilities continue to impress (autoformalization is possible, but not my goal). I haven't been stuck on anything so far. I've also upstreamed many typos to the [companion repo](https://github.com/teorth/analysis).

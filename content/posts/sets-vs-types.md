@@ -3,7 +3,6 @@ title: "From Sets in Math to Types in Lean: Subtype, Fin, Set, Finset, and Finty
 date: 2026-02-14T20:54:04-08:00
 draft: false
 ---
-# From Sets in Math to Types in Lean: Subtype, Fin, Set, Finset, and Fintype
 
 ## Preface: Why All Mathematicians Should Learn Lean
 

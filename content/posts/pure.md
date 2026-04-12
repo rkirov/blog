@@ -4,8 +4,6 @@ date: 2025-11-11T20:18:26-08:00
 draft: false
 ---
 
-# Is this JS function pure?
-
 In 2019, as functional programming was making the last
 inroads dethroning OOP, I kept hearing the mantra of
 "just use pure functions" in JS. Something didn't sit 
