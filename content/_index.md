@@ -21,6 +21,7 @@ Lean series:
 - [From Sets in Math to Types in Lean: Subtype, Fin, Set, Finset, and Fintype](/posts/sets-vs-types)
 - [Leaning on AI](/posts/lean5)
 - [Human Intuition, AI Formalization: A Real Analysis Case Study](/posts/lean6)
+- [From Explicit to Implicit in Lean](/posts/lean-implicits)
 
 Other posts:
 
