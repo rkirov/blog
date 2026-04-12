@@ -12,7 +12,7 @@ still feel lost when reading Lean code.
 
 A very simplified mental model of Lean is that at the core there are two systems:
 
-1) a very fancy functional programming language. The objects here are `Nat`, `List Nat`, functions of those, etc
+**The FP language** - a very fancy functional programming language. The objects here are `Nat`, `List Nat`, functions of those, etc
 
 ```lean
 def n: Nat := 3
@@ -38,7 +38,7 @@ to typed FP.
 def append (a: Type) (x : a) (arr: List a) := arr ++ [x]
 ```
 
-1) a system to state and manipulate logical propositions about the objects of 1). By convention these are
+**The theorem prover** - a system to state and manipulate logical propositions about the objects of the FP language. By convention these are
 named `h*` which stands for hypothesis.
 
 ```lean
@@ -46,7 +46,7 @@ def n := 3
 def hnpos : n > 2 := by decide
 ```
 
-Again this is very uniform - system 2) uses the same keywords for defining and declaring types as 1).
+Again this is very uniform - the theorem prover uses the same keywords for defining and declaring types as the FP language.
 Notably, the type of the proposition is allowed to depend on variables. In the example above, `>`
 is a fancy way of writing `GT.gt n 2`. On the surface it is a generic type like `List a`. Note that `n`
 is a variable of type `Nat`, unlike `a` which was of type `Type`. Allowing such dependency is why
@@ -74,6 +74,8 @@ def and_comm (p q: Prop) (h : p ∧ q) : q ∧ p := ⟨h.2, h.1⟩
 
 You might see the ones above stated with `theorem` not `def`, which is more idiomatic and ergonomic, but the differences are minor.
 The keyword `example` is like an anonymous `theorem` and `lemma` is a synonym for `theorem`.
+
+In reality these two systems share the same core type theory, and that unification is precisely what makes Lean powerful. But thinking of them as two layers is a useful simplification when getting started.
 
 So objects of `Type` and `Prop` are the core ingredients of any Lean proof. Usually, one passes some number of objects, props about
 those and tries to prove some new prop.
