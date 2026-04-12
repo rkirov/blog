@@ -1,7 +1,7 @@
 ---
-title: "Types of implicits in Lean"
+title: "From Explicit to Implicit in Lean"
 date: 2026-04-12T09:25:28-07:00
-draft: false
+draft: true
 ---
 
 Note: AI was used to edit this post. As a proof-of-human thought and input, I am also publishing the [original

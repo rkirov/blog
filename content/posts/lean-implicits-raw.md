@@ -1,5 +1,5 @@
 ---
-title: "Four types of implicits in Lean"
+title: "From Painfully Explicit to Ergonomic in Lean"
 date: 2026-04-12T09:25:28-07:00
 draft: false
 ---
